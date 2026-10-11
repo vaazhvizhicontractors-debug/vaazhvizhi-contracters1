@@ -3,3 +3,16 @@
 @media(max-width:780px){.site-header{min-height:70px}.menu-toggle{display:block;margin-left:auto}.header-cta{display:none}.nav-links{position:absolute;top:69px;right:12px;left:12px;display:none;align-items:stretch;gap:0;margin:0;padding:8px;border:1px solid var(--line);border-radius:14px;background:white;box-shadow:var(--shadow)}.nav-links.is-open{display:flex;flex-direction:column}.nav-links a{padding:12px 14px;border-radius:8px;font-size:.95rem}.nav-links a:hover{background:var(--bg)}.hero{grid-template-columns:1fr;min-height:unset;padding-top:55px}.hero-art{min-height:350px}.section-heading{align-items:flex-start;flex-direction:column;gap:15px}.section-intro{max-width:600px}.forms-grid{grid-template-columns:1fr}.process-grid{grid-template-columns:1fr;gap:12px}.process-grid article{padding-top:20px}.choice-grid{gap:14px}.choice-card{padding:24px}.service-strip{font-size:.66rem;letter-spacing:1.1px}.site-footer{align-items:flex-start;flex-direction:column;gap:12px}}
 @media(max-width:520px){.brand{font-size:.91rem}.brand-mark{width:34px;height:34px}.hero{padding-top:42px;padding-bottom:50px}.hero-art{min-height:290px}.blueprint-front{right:15%;width:58%;height:190px}.blueprint-back{height:155px}.art-sun{right:30px;width:85px;height:85px}.services-grid,.project-grid,.choice-grid,.contact-grid{grid-template-columns:1fr}.service-card{min-height:190px}.project-card{min-height:190px}.choice-card{padding:22px}.field-row{grid-template-columns:1fr;gap:0}.form-actions{flex-direction:column-reverse}.form-actions .button{width:100%}.service-strip{gap:10px;padding:17px 12px}.service-strip i{display:none}.contact-card{padding:19px}.floating-whatsapp{right:14px;bottom:14px;width:50px;height:50px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+/* Enquiry-flow corrections */
+.forms-grid {
+  display: none !important;
+}
+
+.forms-grid.is-visible {
+  display: grid !important;
+}
+
+.form-card[hidden],
+.form-step[hidden] {
+  display: none !important;
+}
