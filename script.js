@@ -1,19 +1,35 @@
+
 (() => {
   'use strict';
 
-  const $ = (s, root = document) => root.querySelector(s);
-  const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+  const $ = (selector, root = document) =>
+    root.querySelector(selector);
+
+  const $$ = (selector, root = document) =>
+    [...root.querySelectorAll(selector)];
+
   const WHATSAPP_NUMBER = '919025541161';
 
-  const year = $('#currentYear');
-  if (year) year.textContent = String(new Date().getFullYear());
+  // --------------------------------------------------
+  // 1. FOOTER YEAR
+  // --------------------------------------------------
 
-  // Mobile navigation
+  const year = $('#currentYear');
+
+  if (year) {
+    year.textContent = String(new Date().getFullYear());
+  }
+
+  // --------------------------------------------------
+  // 2. MOBILE NAVIGATION
+  // --------------------------------------------------
+
   const menuToggle = $('#menuToggle');
   const nav = $('#primaryNav');
 
   function closeMenu() {
     if (!menuToggle || !nav) return;
+
     nav.classList.remove('is-open');
     menuToggle.setAttribute('aria-expanded', 'false');
     menuToggle.setAttribute('aria-label', 'Open menu');
@@ -21,36 +37,55 @@
 
   if (menuToggle && nav) {
     menuToggle.addEventListener('click', () => {
-      const open = nav.classList.toggle('is-open');
-      menuToggle.setAttribute('aria-expanded', String(open));
-      menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      const isOpen = nav.classList.toggle('is-open');
+
+      menuToggle.setAttribute(
+        'aria-expanded',
+        String(isOpen)
+      );
+
+      menuToggle.setAttribute(
+        'aria-label',
+        isOpen ? 'Close menu' : 'Open menu'
+      );
     });
 
-    $$('a', nav).forEach(link =>
-      link.addEventListener('click', closeMenu)
-    );
+    $$('a', nav).forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
 
     document.addEventListener('keydown', event => {
-      if (event.key === 'Escape') closeMenu();
+      if (event.key === 'Escape') {
+        closeMenu();
+      }
     });
 
     document.addEventListener('click', event => {
-      if (!nav.contains(event.target) && !menuToggle.contains(event.target)) {
+      if (
+        !nav.contains(event.target) &&
+        !menuToggle.contains(event.target)
+      ) {
         closeMenu();
       }
     });
   }
 
-  // Enquiry choice: initially hide both forms.
+  // --------------------------------------------------
+  // 3. ENQUIRY FORM VISIBILITY
+  // --------------------------------------------------
+
   const formsGrid = $('.forms-grid');
   const quickCard = $('#quickForm');
   const detailedCard = $('#detailedForm');
   const enquirySection = $('#enquiry');
 
   function hideEnquiryForms(scrollToChoices = false) {
-    if (!formsGrid || !quickCard || !detailedCard) return;
+    if (!formsGrid || !quickCard || !detailedCard) {
+      return;
+    }
 
     formsGrid.classList.remove('is-visible');
+
     quickCard.hidden = true;
     detailedCard.hidden = true;
 
@@ -63,13 +98,21 @@
   }
 
   function showEnquiry(which) {
-    if (!formsGrid || !quickCard || !detailedCard) return;
+    if (!formsGrid || !quickCard || !detailedCard) {
+      return;
+    }
+
+    if (which !== 'quick' && which !== 'detailed') {
+      return;
+    }
 
     formsGrid.classList.add('is-visible');
+
     quickCard.hidden = which !== 'quick';
     detailedCard.hidden = which !== 'detailed';
 
-    const target = which === 'quick' ? quickCard : detailedCard;
+    const target =
+      which === 'quick' ? quickCard : detailedCard;
 
     window.setTimeout(() => {
       target.scrollIntoView({
@@ -79,8 +122,10 @@
     }, 30);
   }
 
+  // Both forms are hidden when the page first loads.
   hideEnquiryForms();
 
+  // Quick Enquiry links.
   $$('a[href="#quickForm"]').forEach(link => {
     link.addEventListener('click', event => {
       event.preventDefault();
@@ -88,6 +133,7 @@
     });
   });
 
+  // Detailed Quote links.
   $$('a[href="#detailedForm"]').forEach(link => {
     link.addEventListener('click', event => {
       event.preventDefault();
@@ -95,50 +141,92 @@
     });
   });
 
-  // Add a switch-back button to both forms.
+  // Add a switch-back button only when one is missing.
   [quickCard, detailedCard].forEach(card => {
-    if (!card || $('.enquiry-switch', card)) return;
+    if (!card) return;
 
-    const switchButton = document.createElement('button');
-    switchButton.type = 'button';
-    switchButton.className = 'enquiry-switch';
-    switchButton.textContent = '← Choose a different enquiry option';
+    const existingButton = $(
+      '[data-switch-enquiry], .enquiry-switch',
+      card
+    );
 
-    switchButton.addEventListener('click', () => {
-      hideEnquiryForms(true);
-    });
+    if (existingButton) {
+      existingButton.setAttribute(
+        'data-switch-enquiry',
+        ''
+      );
+      return;
+    }
+
+    const button = document.createElement('button');
+
+    button.type = 'button';
+    button.className = 'enquiry-switch';
+    button.setAttribute('data-switch-enquiry', '');
+    button.textContent =
+      '← Back to enquiry choices';
 
     const heading = $('.form-heading', card);
-    if (heading) heading.appendChild(switchButton);
+
+    if (heading) {
+      heading.appendChild(button);
+    } else {
+      card.appendChild(button);
+    }
   });
 
-  // Project cards select a project and open Detailed Quote.
+  // Handle both existing and automatically created buttons.
+  $$('[data-switch-enquiry]').forEach(button => {
+    button.addEventListener('click', () => {
+      hideEnquiryForms(true);
+    });
+  });
+
+  // --------------------------------------------------
+  // 4. PROJECT CARDS
+  // --------------------------------------------------
+
   $$('[data-project]').forEach(card => {
     card.addEventListener('click', () => {
       const projectType = $('#projectType');
 
       if (projectType) {
         projectType.value = card.dataset.project || '';
+
+        // Notify any other listeners of the selection.
+        projectType.dispatchEvent(
+          new Event('change', { bubbles: true })
+        );
       }
 
       showEnquiry('detailed');
     });
   });
 
-  // QUICK ENQUIRY: WhatsApp only.
-  // This form does not submit to Apps Script or Google Sheets.
+  // --------------------------------------------------
+  // 5. QUICK ENQUIRY — WHATSAPP ONLY
+  // --------------------------------------------------
+
   const quickForm = $('#quickEnquiryForm');
 
   if (quickForm) {
     quickForm.addEventListener('submit', event => {
       event.preventDefault();
 
-      const name = ($('#quickName')?.value || '').trim();
-      const service = ($('#quickService')?.value || '').trim();
-      const message = ($('#quickMessage')?.value || '').trim();
+      const name =
+        ($('#quickName')?.value || '').trim();
+
+      const service =
+        ($('#quickService')?.value || '').trim();
+
+      const message =
+        ($('#quickMessage')?.value || '').trim();
+
       const error = $('#quickError');
 
-      if (error) error.textContent = '';
+      if (error) {
+        error.textContent = '';
+      }
 
       if (!name || !service || !message) {
         if (error) {
@@ -146,9 +234,14 @@
             'Please complete your name, service and message.';
         }
 
-        (!name ? $('#quickName') :
-          !service ? $('#quickService') :
-            $('#quickMessage'))?.focus();
+        const invalidField =
+          !name
+            ? $('#quickName')
+            : !service
+              ? $('#quickService')
+              : $('#quickMessage');
+
+        invalidField?.focus();
 
         return;
       }
@@ -162,42 +255,83 @@
         `Message: ${message}`
       ].join('\n');
 
-      const url =
-        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+      const whatsappURL =
+        `https://wa.me/${WHATSAPP_NUMBER}` +
+        `?text=${encodeURIComponent(whatsappMessage)}`;
 
-      const opened = window.open(url, '_blank', 'noopener,noreferrer');
+      // Open WhatsApp from the user's submit action.
+      // Do not send this form to Google Sheets.
+      const whatsappWindow = window.open(
+        whatsappURL,
+        '_blank'
+      );
 
-      // If popup is blocked, use the current tab.
-      if (!opened) {
-        window.location.href = url;
+      if (whatsappWindow) {
+        // Prevent the new page from controlling this page.
+        whatsappWindow.opener = null;
+      } else {
+        // Fallback when the browser blocks the new tab.
+        window.location.assign(whatsappURL);
       }
     });
   }
 
-  // DETAILED QUOTE: two-step form.
+  // --------------------------------------------------
+  // 6. DETAILED QUOTE — TWO-STEP FORM
+  // --------------------------------------------------
+
   const form = $('#detailedQuoteForm');
+
   if (!form) return;
 
+  // Our JavaScript handles validation across both steps.
+  // This avoids native validation stopping on hidden fields.
+  form.noValidate = true;
+
   const steps = $$('[data-step]', form);
+
   const next = $('#nextStep');
   const back = $('#backStep');
   const submit = $('#submitQuote');
+
   const status = $('#quoteStatus');
   const stepLabel = $('#stepLabel');
   const stepTitle = $('#stepTitle');
   const progress = $('#progressBar');
+
   const step1Error = $('#step1Error');
   const step2Error = $('#step2Error');
+
+  const submissionFrame =
+    $('iframe[name="submissionFrame"]') ||
+    $('#submissionFrame');
 
   let submitted = false;
   let completed = false;
   let fallbackTimer = null;
 
+  // Set a status message with an optional visual state.
+  function setStatus(message, color = '') {
+    if (!status) return;
+
+    status.textContent = message;
+
+    if (color) {
+      status.style.color = color;
+    }
+  }
+
+  // --------------------------------------------------
+  // 7. STEP DISPLAY
+  // --------------------------------------------------
+
   function showStep(number, focus = true) {
     steps.forEach(step => {
-      const active = Number(step.dataset.step) === number;
-      step.hidden = !active;
-      step.classList.toggle('is-active', active);
+      const isActive =
+        Number(step.dataset.step) === number;
+
+      step.hidden = !isActive;
+      step.classList.toggle('is-active', isActive);
     });
 
     if (stepLabel) {
@@ -206,39 +340,72 @@
 
     if (stepTitle) {
       stepTitle.textContent =
-        number === 1 ? 'Contact & project' : 'Project requirements';
+        number === 1
+          ? 'Contact & project'
+          : 'Project requirements';
     }
 
     if (progress) {
-      progress.style.width = number === 1 ? '50%' : '100%';
+      progress.style.width =
+        number === 1 ? '50%' : '100%';
     }
 
-    if (step1Error) step1Error.textContent = '';
-    if (step2Error) step2Error.textContent = '';
+    if (step1Error) {
+      step1Error.textContent = '';
+    }
+
+    if (step2Error) {
+      step2Error.textContent = '';
+    }
 
     if (focus) {
-      const target = number === 1 ? $('#quoteName') : $('#quoteBudget');
+      const target =
+        number === 1
+          ? $('#quoteName')
+          : $('#quoteBudget');
+
       target?.focus({ preventScroll: true });
     }
   }
+
+  // --------------------------------------------------
+  // 8. VALIDATION
+  // --------------------------------------------------
 
   function validStep(number) {
     const step = steps.find(
       item => Number(item.dataset.step) === number
     );
 
-    const error = number === 1 ? step1Error : step2Error;
+    const error =
+      number === 1 ? step1Error : step2Error;
 
     if (!step) return true;
-    if (error) error.textContent = '';
 
+    if (error) {
+      error.textContent = '';
+    }
+
+    // Include optional fields too, so optional email
+    // is validated when the user has entered an address.
     const fields = $$(
-      'input[required], select[required], textarea[required]',
+      'input, select, textarea',
       step
     );
 
     for (const field of fields) {
-      if (!String(field.value || '').trim()) {
+      if (
+        field.disabled ||
+        field.type === 'hidden' ||
+        field.type === 'submit' ||
+        field.type === 'button'
+      ) {
+        continue;
+      }
+
+      const value = String(field.value || '').trim();
+
+      if (field.required && !value) {
         if (error) {
           error.textContent =
             'Please complete the required fields marked *.';
@@ -248,8 +415,24 @@
         return false;
       }
 
-      if (field.type === 'tel') {
-        const digits = field.value.replace(/\D/g, '');
+      // Validate a supplied email, even when optional.
+      if (
+        field.type === 'email' &&
+        value &&
+        !field.validity.valid
+      ) {
+        if (error) {
+          error.textContent =
+            'Please enter a valid email address.';
+        }
+
+        field.focus();
+        return false;
+      }
+
+      // Validate phone number when provided.
+      if (field.type === 'tel' && value) {
+        const digits = value.replace(/\D/g, '');
 
         if (digits.length < 10 || digits.length > 15) {
           if (error) {
@@ -262,11 +445,18 @@
         }
       }
 
-      if (field.type === 'email' &&
-          field.value.trim() &&
-          !field.validity.valid) {
+      // Check other HTML constraints such as minlength,
+      // maxlength and pattern where applicable.
+      if (
+        value &&
+        field.type !== 'email' &&
+        field.type !== 'tel' &&
+        !field.validity.valid
+      ) {
         if (error) {
-          error.textContent = 'Please enter a valid email address.';
+          error.textContent =
+            field.validationMessage ||
+            'Please check this field and try again.';
         }
 
         field.focus();
@@ -278,37 +468,72 @@
   }
 
   next?.addEventListener('click', () => {
-    if (validStep(1)) showStep(2);
+    if (validStep(1)) {
+      showStep(2);
+    }
   });
 
-  back?.addEventListener('click', () => showStep(1));
+  back?.addEventListener('click', () => {
+    showStep(1);
+  });
+
+  // --------------------------------------------------
+  // 9. SUBMIT BUTTON STATE
+  // --------------------------------------------------
 
   function setSubmitBusy(busy) {
     if (!submit) return;
 
     submit.disabled = busy;
+
     submit.textContent = busy
       ? 'Submitting…'
       : 'Submit detailed quote ↗';
   }
 
-  // Receive Apps Script result.
-  // Submission ID must match the currently submitted form.
+  // --------------------------------------------------
+  // 10. APPS SCRIPT RESPONSE
+  // --------------------------------------------------
+
   window.addEventListener('message', event => {
     if (!submitted || completed) return;
-    if (!event.data || typeof event.data !== 'object') return;
+
+    // Accept messages only from our submission iframe.
+    if (
+      !submissionFrame ||
+      event.source !== submissionFrame.contentWindow
+    ) {
+      return;
+    }
+
+    if (
+      !event.data ||
+      typeof event.data !== 'object'
+    ) {
+      return;
+    }
 
     const data = event.data;
-    const currentId = $('#submissionId')?.value || '';
+    const currentId =
+      $('#submissionId')?.value || '';
 
-    if (data.type !== 'vaazhvizhiQuoteResult') return;
-    if (!currentId || data.submissionId !== currentId) return;
+    if (data.type !== 'vaazhvizhiQuoteResult') {
+      return;
+    }
+
+    if (
+      !currentId ||
+      data.submissionId !== currentId
+    ) {
+      return;
+    }
 
     completed = true;
     submitted = false;
 
     if (fallbackTimer) {
       window.clearTimeout(fallbackTimer);
+      fallbackTimer = null;
     }
 
     setSubmitBusy(false);
@@ -317,82 +542,139 @@
       form.reset();
 
       const idField = $('#submissionId');
-      if (idField) idField.value = '';
+
+      if (idField) {
+        idField.value = '';
+      }
 
       showStep(1, false);
 
-      if (status) {
-        status.textContent =
-          'Detailed quote saved successfully. Thank you!';
-        status.style.color = '#24866a';
-      }
+      setStatus(
+        'Detailed quote saved successfully. Thank you!',
+        '#24866a'
+      );
     } else {
-      if (status) {
-        status.textContent = data.message ||
-          'The quote was not confirmed as saved. Please check the sheet before retrying.';
-        status.style.color = '#b42318';
-      }
+      setStatus(
+        data.message ||
+          'The quote was not confirmed as saved. Please check Google Sheets before retrying.',
+        '#b42318'
+      );
     }
   });
+
+  // --------------------------------------------------
+  // 11. DETAILED FORM SUBMISSION
+  // --------------------------------------------------
 
   form.addEventListener('submit', event => {
     event.preventDefault();
 
-    // Validate step 1 first so focus never jumps to a hidden field.
+    if (submitted) return;
+
+    // Validate step 1 first.
     if (!validStep(1)) {
       showStep(1, false);
       return;
     }
 
+    // Then validate step 2.
     if (!validStep(2)) {
       showStep(2, false);
       return;
     }
 
+    // Honeypot spam check.
     const honeypot = $('#website');
 
-    if (honeypot && honeypot.value.trim()) return;
-    if (submitted) return;
+    if (honeypot && honeypot.value.trim()) {
+      // Do not submit a likely bot entry.
+      return;
+    }
+
+    // The named iframe is required for this submission method.
+    if (!submissionFrame) {
+      setStatus(
+        'Submission setup error: the submission iframe is missing. Please contact us directly.',
+        '#b42318'
+      );
+
+      return;
+    }
+
+    // Ensure the form has an Apps Script destination.
+    if (!form.action) {
+      setStatus(
+        'Submission setup error: the form endpoint is missing.',
+        '#b42318'
+      );
+
+      return;
+    }
 
     const idField = $('#submissionId');
 
-    // Reuse the same ID when retrying after a timeout.
+    // Reuse the ID after a timeout to help the backend
+    // detect retries of the same submission.
     if (idField && !idField.value) {
-      idField.value = (window.crypto && crypto.randomUUID)
-        ? crypto.randomUUID()
-        : `vq-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      idField.value =
+        window.crypto &&
+        typeof window.crypto.randomUUID === 'function'
+          ? window.crypto.randomUUID()
+          : `vq-${Date.now()}-${Math.random()
+              .toString(36)
+              .slice(2, 10)}`;
     }
 
     submitted = true;
     completed = false;
 
-    if (status) {
-      status.textContent =
-        'Submitting detailed quote… Please wait and do not refresh this page.';
-      status.style.color = '#245b92';
-    }
+    setStatus(
+      'Submitting detailed quote… Please wait and do not refresh this page.',
+      '#245b92'
+    );
 
     setSubmitBusy(true);
 
-    // POST to Apps Script using the hidden iframe.
-    // This avoids fetch CORS restrictions for the cross-origin endpoint.
-    HTMLFormElement.prototype.submit.call(form);
-
     if (fallbackTimer) {
       window.clearTimeout(fallbackTimer);
+      fallbackTimer = null;
     }
 
+    // Send the form to Apps Script through the hidden iframe.
+    // This is not the Quick Enquiry / WhatsApp route.
+    try {
+      HTMLFormElement.prototype.submit.call(form);
+    } catch (error) {
+      submitted = false;
+      setSubmitBusy(false);
+
+      setStatus(
+        'Could not submit the quote. Please try again.',
+        '#b42318'
+      );
+
+      return;
+    }
+
+    // A timeout means confirmation was not received;
+    // it does NOT prove that the sheet write failed.
     fallbackTimer = window.setTimeout(() => {
       if (completed) return;
 
       submitted = false;
       setSubmitBusy(false);
 
-      if (status) {
-        status.textContent =
-          'We could not confirm the result automatically. Check the Google Sheet before retrying. If you retry, the same submission ID is reused to help prevent duplicate rows.';
-        status.style.color = '#946200';
-      }
+      setStatus(
+        'We could not confirm the result automatically. Check Google Sheets before retrying. Your submission ID is retained to help prevent duplicate rows.',
+        '#946200'
+      );
     }, 15000);
   });
+
+  // --------------------------------------------------
+  // 12. INITIAL DETAILED FORM STATE
+  // --------------------------------------------------
+
+  showStep(1, false);
+
 })();
