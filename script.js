@@ -1,19 +1,13 @@
-
+```javascript
 (() => {
   'use strict';
 
-  const $ = (selector, root = document) =>
-    root.querySelector(selector);
-
-  const $$ = (selector, root = document) =>
-    [...root.querySelectorAll(selector)];
-
-  const WHATSAPP_NUMBER = '919025541161';
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
   // --------------------------------------------------
   // 1. FOOTER YEAR
   // --------------------------------------------------
-
   const year = $('#currentYear');
 
   if (year) {
@@ -23,7 +17,6 @@
   // --------------------------------------------------
   // 2. MOBILE NAVIGATION
   // --------------------------------------------------
-
   const menuToggle = $('#menuToggle');
   const nav = $('#primaryNav');
 
@@ -39,11 +32,7 @@
     menuToggle.addEventListener('click', () => {
       const isOpen = nav.classList.toggle('is-open');
 
-      menuToggle.setAttribute(
-        'aria-expanded',
-        String(isOpen)
-      );
-
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
       menuToggle.setAttribute(
         'aria-label',
         isOpen ? 'Close menu' : 'Open menu'
@@ -71,223 +60,98 @@
   }
 
   // --------------------------------------------------
-  // 3. ENQUIRY FORM VISIBILITY
+  // 3. ENQUIRY FLOW
+  //
+  // Immediate Enquiry:
+  // Direct WhatsApp link configured in index.html.
+  //
+  // Get Detailed Quote:
+  // Opens the detailed quote form.
+  // Detailed form submission goes to Google Sheets
+  // through the configured Google Apps Script endpoint.
+  // It does not automatically open WhatsApp.
   // --------------------------------------------------
-
-  const formsGrid = $('.forms-grid');
-  const quickCard = $('#quickForm');
+  const formsGrid = $('#quoteForms');
   const detailedCard = $('#detailedForm');
-  const enquirySection = $('#enquiry');
+  const showDetailedButton = $('#showDetailedQuote');
 
-  function hideEnquiryForms(scrollToChoices = false) {
-    if (!formsGrid || !quickCard || !detailedCard) {
-      return;
-    }
+  function hideDetailedQuote() {
+    if (!formsGrid || !detailedCard) return;
 
+    detailedCard.hidden = true;
     formsGrid.classList.remove('is-visible');
 
-    quickCard.hidden = true;
-    detailedCard.hidden = true;
-
-    if (scrollToChoices && enquirySection) {
-      enquirySection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
+    showDetailedButton?.setAttribute('aria-expanded', 'false');
   }
 
-  function showEnquiry(which) {
-    if (!formsGrid || !quickCard || !detailedCard) {
-      return;
-    }
+  function showDetailedQuote(shouldScroll = true) {
+    if (!formsGrid || !detailedCard) return;
 
-    if (which !== 'quick' && which !== 'detailed') {
-      return;
-    }
-
+    detailedCard.hidden = false;
     formsGrid.classList.add('is-visible');
 
-    quickCard.hidden = which !== 'quick';
-    detailedCard.hidden = which !== 'detailed';
+    showDetailedButton?.setAttribute('aria-expanded', 'true');
 
-    const target =
-      which === 'quick' ? quickCard : detailedCard;
-
-    window.setTimeout(() => {
-      target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }, 30);
+    if (shouldScroll) {
+      window.setTimeout(() => {
+        detailedCard.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 40);
+    }
   }
 
-  // Both forms are hidden when the page first loads.
-  hideEnquiryForms();
+  // Keep the detailed quote form hidden when the page loads.
+  hideDetailedQuote();
 
-  // Quick Enquiry links.
-  $$('a[href="#quickForm"]').forEach(link => {
+  showDetailedButton?.addEventListener('click', () => {
+    showDetailedQuote(true);
+  });
+
+  // Hero or other CTA buttons can use:
+  // data-open-detailed-quote
+  $$('[data-open-detailed-quote]').forEach(link => {
     link.addEventListener('click', event => {
       event.preventDefault();
-      showEnquiry('quick');
+      showDetailedQuote(true);
     });
   });
 
-  // Detailed Quote links.
-  $$('a[href="#detailedForm"]').forEach(link => {
-    link.addEventListener('click', event => {
-      event.preventDefault();
-      showEnquiry('detailed');
-    });
-  });
-
-  // Add a switch-back button only when one is missing.
-  [quickCard, detailedCard].forEach(card => {
-    if (!card) return;
-
-    const existingButton = $(
-      '[data-switch-enquiry], .enquiry-switch',
-      card
-    );
-
-    if (existingButton) {
-      existingButton.setAttribute(
-        'data-switch-enquiry',
-        ''
-      );
-      return;
-    }
-
-    const button = document.createElement('button');
-
-    button.type = 'button';
-    button.className = 'enquiry-switch';
-    button.setAttribute('data-switch-enquiry', '');
-    button.textContent =
-      '← Back to enquiry choices';
-
-    const heading = $('.form-heading', card);
-
-    if (heading) {
-      heading.appendChild(button);
-    } else {
-      card.appendChild(button);
-    }
-  });
-
-  // Handle both existing and automatically created buttons.
-  $$('[data-switch-enquiry]').forEach(button => {
-    button.addEventListener('click', () => {
-      hideEnquiryForms(true);
-    });
-  });
-
-  // --------------------------------------------------
-  // 4. PROJECT CARDS
-  // --------------------------------------------------
-
+  // Project cards can use:
+  // data-project="New Construction"
   $$('[data-project]').forEach(card => {
-    card.addEventListener('click', () => {
+    card.addEventListener('click', event => {
+      event.preventDefault();
+
       const projectType = $('#projectType');
 
       if (projectType) {
         projectType.value = card.dataset.project || '';
 
-        // Notify any other listeners of the selection.
         projectType.dispatchEvent(
           new Event('change', { bubbles: true })
         );
       }
 
-      showEnquiry('detailed');
+      showDetailedQuote(true);
     });
   });
 
   // --------------------------------------------------
-  // 5. QUICK ENQUIRY — WHATSAPP ONLY
+  // 4. DETAILED QUOTE FORM INITIALIZATION
   // --------------------------------------------------
-
-  const quickForm = $('#quickEnquiryForm');
-
-  if (quickForm) {
-    quickForm.addEventListener('submit', event => {
-      event.preventDefault();
-
-      const name =
-        ($('#quickName')?.value || '').trim();
-
-      const service =
-        ($('#quickService')?.value || '').trim();
-
-      const message =
-        ($('#quickMessage')?.value || '').trim();
-
-      const error = $('#quickError');
-
-      if (error) {
-        error.textContent = '';
-      }
-
-      if (!name || !service || !message) {
-        if (error) {
-          error.textContent =
-            'Please complete your name, service and message.';
-        }
-
-        const invalidField =
-          !name
-            ? $('#quickName')
-            : !service
-              ? $('#quickService')
-              : $('#quickMessage');
-
-        invalidField?.focus();
-
-        return;
-      }
-
-      const whatsappMessage = [
-        'Hello Vaazhvizhi Contracters,',
-        '',
-        'I have a quick enquiry.',
-        `Name: ${name}`,
-        `Service / need: ${service}`,
-        `Message: ${message}`
-      ].join('\n');
-
-      const whatsappURL =
-        `https://wa.me/${WHATSAPP_NUMBER}` +
-        `?text=${encodeURIComponent(whatsappMessage)}`;
-
-      // Open WhatsApp from the user's submit action.
-      // Do not send this form to Google Sheets.
-      const whatsappWindow = window.open(
-        whatsappURL,
-        '_blank'
-      );
-
-      if (whatsappWindow) {
-        // Prevent the new page from controlling this page.
-        whatsappWindow.opener = null;
-      } else {
-        // Fallback when the browser blocks the new tab.
-        window.location.assign(whatsappURL);
-      }
-    });
-  }
-
-  // --------------------------------------------------
-  // 6. DETAILED QUOTE — TWO-STEP FORM
-  // --------------------------------------------------
-
   const form = $('#detailedQuoteForm');
 
+  // Allow the website to work even if the quote form
+  // is not present on a particular page.
   if (!form) return;
 
-  // Our JavaScript handles validation across both steps.
-  // This avoids native validation stopping on hidden fields.
+  // Validate the visible step manually so fields in a
+  // hidden step do not block the visitor from continuing.
   form.noValidate = true;
 
+  const frame = $('#submissionFrame');
   const steps = $$('[data-step]', form);
 
   const next = $('#nextStep');
@@ -302,15 +166,13 @@
   const step1Error = $('#step1Error');
   const step2Error = $('#step2Error');
 
-  const submissionFrame =
-    $('iframe[name="submissionFrame"]') ||
-    $('#submissionFrame');
-
   let submitted = false;
   let completed = false;
   let fallbackTimer = null;
 
-  // Set a status message with an optional visual state.
+  // --------------------------------------------------
+  // 5. FORM STATUS MESSAGE
+  // --------------------------------------------------
   function setStatus(message, color = '') {
     if (!status) return;
 
@@ -322,16 +184,14 @@
   }
 
   // --------------------------------------------------
-  // 7. STEP DISPLAY
+  // 6. SHOW STEP 1 OR STEP 2
   // --------------------------------------------------
-
   function showStep(number, focus = true) {
     steps.forEach(step => {
-      const isActive =
-        Number(step.dataset.step) === number;
+      const active = Number(step.dataset.step) === number;
 
-      step.hidden = !isActive;
-      step.classList.toggle('is-active', isActive);
+      step.hidden = !active;
+      step.classList.toggle('is-active', active);
     });
 
     if (stepLabel) {
@@ -346,8 +206,7 @@
     }
 
     if (progress) {
-      progress.style.width =
-        number === 1 ? '50%' : '100%';
+      progress.style.width = number === 1 ? '50%' : '100%';
     }
 
     if (step1Error) {
@@ -369,16 +228,17 @@
   }
 
   // --------------------------------------------------
-  // 8. VALIDATION
+  // 7. VALIDATE EACH FORM STEP
   // --------------------------------------------------
-
   function validStep(number) {
     const step = steps.find(
       item => Number(item.dataset.step) === number
     );
 
     const error =
-      number === 1 ? step1Error : step2Error;
+      number === 1
+        ? step1Error
+        : step2Error;
 
     if (!step) return true;
 
@@ -386,8 +246,6 @@
       error.textContent = '';
     }
 
-    // Include optional fields too, so optional email
-    // is validated when the user has entered an address.
     const fields = $$(
       'input, select, textarea',
       step
@@ -396,15 +254,14 @@
     for (const field of fields) {
       if (
         field.disabled ||
-        field.type === 'hidden' ||
-        field.type === 'submit' ||
-        field.type === 'button'
+        ['hidden', 'submit', 'button'].includes(field.type)
       ) {
         continue;
       }
 
       const value = String(field.value || '').trim();
 
+      // Required field validation.
       if (field.required && !value) {
         if (error) {
           error.textContent =
@@ -415,22 +272,7 @@
         return false;
       }
 
-      // Validate a supplied email, even when optional.
-      if (
-        field.type === 'email' &&
-        value &&
-        !field.validity.valid
-      ) {
-        if (error) {
-          error.textContent =
-            'Please enter a valid email address.';
-        }
-
-        field.focus();
-        return false;
-      }
-
-      // Validate phone number when provided.
+      // Telephone number validation.
       if (field.type === 'tel' && value) {
         const digits = value.replace(/\D/g, '');
 
@@ -445,8 +287,22 @@
         }
       }
 
-      // Check other HTML constraints such as minlength,
-      // maxlength and pattern where applicable.
+      // Email validation.
+      if (
+        field.type === 'email' &&
+        value &&
+        !field.validity.valid
+      ) {
+        if (error) {
+          error.textContent =
+            'Please enter a valid email address.';
+        }
+
+        field.focus();
+        return false;
+      }
+
+      // Other HTML constraint validation.
       if (
         value &&
         field.type !== 'email' &&
@@ -467,6 +323,9 @@
     return true;
   }
 
+  // --------------------------------------------------
+  // 8. NEXT AND BACK BUTTONS
+  // --------------------------------------------------
   next?.addEventListener('click', () => {
     if (validStep(1)) {
       showStep(2);
@@ -478,9 +337,8 @@
   });
 
   // --------------------------------------------------
-  // 9. SUBMIT BUTTON STATE
+  // 9. SUBMIT BUTTON LOADING STATE
   // --------------------------------------------------
-
   function setSubmitBusy(busy) {
     if (!submit) return;
 
@@ -492,19 +350,16 @@
   }
 
   // --------------------------------------------------
-  // 10. APPS SCRIPT RESPONSE
+  // 10. RECEIVE GOOGLE APPS SCRIPT RESPONSE
+  //
+  // The Apps Script backend must send a matching
+  // postMessage response to the hidden iframe's parent.
   // --------------------------------------------------
-
   window.addEventListener('message', event => {
-    if (!submitted || completed) return;
+    if (!submitted || completed || !frame) return;
 
-    // Accept messages only from our submission iframe.
-    if (
-      !submissionFrame ||
-      event.source !== submissionFrame.contentWindow
-    ) {
-      return;
-    }
+    // Accept responses only from our response iframe.
+    if (event.source !== frame.contentWindow) return;
 
     if (
       !event.data ||
@@ -514,19 +369,11 @@
     }
 
     const data = event.data;
-    const currentId =
-      $('#submissionId')?.value || '';
+    const currentId = $('#submissionId')?.value || '';
 
-    if (data.type !== 'vaazhvizhiQuoteResult') {
-      return;
-    }
-
-    if (
-      !currentId ||
-      data.submissionId !== currentId
-    ) {
-      return;
-    }
+    // Check response type and submission ID.
+    if (data.type !== 'vaazhvizhiQuoteResult') return;
+    if (!currentId || data.submissionId !== currentId) return;
 
     completed = true;
     submitted = false;
@@ -538,7 +385,11 @@
 
     setSubmitBusy(false);
 
-    if (data.success === true) {
+    if (
+      data.success === true ||
+      data.status === 'success'
+    ) {
+      // Reset the form only after confirmed success.
       form.reset();
 
       const idField = $('#submissionId');
@@ -563,58 +414,63 @@
   });
 
   // --------------------------------------------------
-  // 11. DETAILED FORM SUBMISSION
+  // 11. DETAILED QUOTE SUBMISSION
   // --------------------------------------------------
-
   form.addEventListener('submit', event => {
     event.preventDefault();
 
+    // Prevent duplicate clicks while submitting.
     if (submitted) return;
 
-    // Validate step 1 first.
+    // Validate step 1.
+    showStep(1, false);
+
     if (!validStep(1)) {
-      showStep(1, false);
       return;
     }
 
-    // Then validate step 2.
+    // Validate step 2.
+    showStep(2, false);
+
     if (!validStep(2)) {
-      showStep(2, false);
       return;
     }
 
-    // Honeypot spam check.
+    // Honeypot field for basic spam protection.
     const honeypot = $('#website');
 
     if (honeypot && honeypot.value.trim()) {
-      // Do not submit a likely bot entry.
       return;
     }
 
-    // The named iframe is required for this submission method.
-    if (!submissionFrame) {
+    // A hidden response iframe is required.
+    if (!frame) {
       setStatus(
-        'Submission setup error: the submission iframe is missing. Please contact us directly.',
+        'Submission setup error: response iframe is missing.',
         '#b42318'
       );
 
       return;
     }
 
-    // Ensure the form has an Apps Script destination.
-    if (!form.action) {
+    // Ensure the form action points to Google Apps Script.
+    if (
+      !form.action ||
+      !/script\.google\.com\/macros\/s\//.test(form.action)
+    ) {
       setStatus(
-        'Submission setup error: the form endpoint is missing.',
+        'Submission setup error: the Apps Script endpoint is missing or invalid.',
         '#b42318'
       );
 
       return;
     }
 
+    // Generate a unique submission ID once.
+    // Keep the same ID during a retry to help the backend
+    // identify duplicate submissions.
     const idField = $('#submissionId');
 
-    // Reuse the ID after a timeout to help the backend
-    // detect retries of the same submission.
     if (idField && !idField.value) {
       idField.value =
         window.crypto &&
@@ -637,15 +493,15 @@
 
     if (fallbackTimer) {
       window.clearTimeout(fallbackTimer);
-      fallbackTimer = null;
     }
 
-    // Send the form to Apps Script through the hidden iframe.
-    // This is not the Quick Enquiry / WhatsApp route.
     try {
+      // Submit to the hidden iframe instead of navigating
+      // away from the website or opening WhatsApp.
       HTMLFormElement.prototype.submit.call(form);
     } catch (error) {
       submitted = false;
+
       setSubmitBusy(false);
 
       setStatus(
@@ -656,8 +512,8 @@
       return;
     }
 
-    // A timeout means confirmation was not received;
-    // it does NOT prove that the sheet write failed.
+    // If no backend response arrives, show a warning.
+    // This timeout does not prove that saving failed.
     fallbackTimer = window.setTimeout(() => {
       if (completed) return;
 
@@ -672,9 +528,10 @@
   });
 
   // --------------------------------------------------
-  // 12. INITIAL DETAILED FORM STATE
+  // 12. INITIAL FORM STATE
   // --------------------------------------------------
-
+  // Start at step 1 whenever the form is initialized.
   showStep(1, false);
 
 })();
+```
