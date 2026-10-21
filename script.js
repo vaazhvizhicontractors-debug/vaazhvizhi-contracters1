@@ -38,6 +38,7 @@
   // Immediate Enquiry remains a direct WhatsApp link. It does not submit to Sheets.
   // Detailed Quote starts hidden and opens only when requested.
   const detailedPanel = $('#detailedForm');
+  const quoteForms = $('#quoteForms');
   const openDetailedButton = $('#showDetailedQuote');
   const detailedForm = $('#detailedQuoteForm');
   const frame = $('#submissionFrame');
@@ -64,6 +65,8 @@
 
   function openDetailedQuote(projectType = '') {
     if (!detailedPanel) return;
+    // Reveal the grid and form only after an explicit Detailed Quote action.
+    if (quoteForms) quoteForms.classList.add('is-visible');
     detailedPanel.hidden = false;
     if (openDetailedButton) openDetailedButton.setAttribute('aria-expanded', 'true');
 
@@ -115,13 +118,8 @@
     });
   });
 
-  // Project-type cards open the detailed form and preselect the matching project.
-  $$('[data-project]').forEach(link => {
-    link.addEventListener('click', event => {
-      event.preventDefault();
-      openDetailedQuote(link.dataset.project || '');
-    });
-  });
+  // Project/service cards do not open the quote form. Only the explicit
+  // Get Detailed Quote buttons/links above may reveal it.
 
   function validateStep1() {
     if (step1Error) step1Error.textContent = '';
@@ -187,7 +185,6 @@
     if (submitting) return;
     if (!validateStep1()) {
       showStep(1);
-      validateStep1(); // Re-render the validation message after revealing step 1.
       return;
     }
 
