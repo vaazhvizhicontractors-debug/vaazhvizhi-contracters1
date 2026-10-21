@@ -1,0 +1,438 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123d72">
+  <meta name="description" content="Vaazhvizhi Contracters — construction, design, renovation and building support.">
+  <title>Vaazhvizhi Contracters | Construction, Design &amp; Renovation</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Vaazhvizhi Contracters home">
+      <span class="brand-mark">V</span>
+      <span>Vaazhvizhi <b>Contracters</b></span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" aria-controls="primaryNav"
+      aria-expanded="false" aria-label="Open menu" type="button">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav-links" id="primaryNav">
+      <a href="#services">Services</a>
+      <a href="#projects">Project Types</a>
+      <a href="#process">Our Process</a>
+      <a href="#enquiry">Enquiry</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <a class="header-cta" href="#enquiry">Get Started <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero section" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> CONSTRUCTION · DESIGN · RENOVATION</p>
+        <h1 class="hero-title">உங்கள் கனவு,<br><em>வாழ்விழியுடன்</em></h1>
+        <p class="hero-description">
+          Construction, interiors, renovation, materials and planning support —
+          coordinated around your project.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" data-open-detailed-quote
+            href="#detailedForm" aria-controls="detailedForm">
+            Get Detailed Quote <span aria-hidden="true">↗</span>
+          </a>
+          <a class="button button-outline" href="#services">Explore services</a>
+        </div>
+      </div>
+
+      <!-- Clear blueprint diagram beside the hero title -->
+      <div class="hero-art" aria-label="House blueprint illustration">
+        <div class="art-sun" aria-hidden="true"></div>
+        <svg class="hero-blueprint-svg" viewBox="0 0 520 410" role="img"
+          aria-labelledby="blueprintTitle blueprintDesc">
+          <title id="blueprintTitle">House planning blueprint</title>
+          <desc id="blueprintDesc">
+            House elevation with roof, windows, door, floor line and measurement markers.
+          </desc>
+          <defs>
+            <pattern id="blueprintGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M20 0H0V20" fill="none" stroke="#cbdff1" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect x="14" y="14" width="492" height="382" rx="16" fill="url(#blueprintGrid)"/>
+          <g fill="none" stroke="#123d72" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M105 166 260 62 415 166" stroke-width="5"/>
+            <path d="M130 155V310H390V155" stroke-width="4" fill="#fff" fill-opacity=".88"/>
+            <path d="M157 185H218V235H157Z M302 185H363V235H302Z"
+              stroke-width="3" fill="#e7f2fc"/>
+            <path d="M187 185V235M157 210H218M332 185V235M302 210H363" stroke-width="2"/>
+            <path d="M232 232H288V310H232Z" stroke-width="3" fill="#d8eafa"/>
+            <path d="M260 232V310" stroke-width="2"/>
+            <path d="M102 316H418" stroke-width="4"/>
+            <path d="M130 145V126H155M390 145V126H365"
+              stroke-width="2" stroke-dasharray="5 5"/>
+          </g>
+          <g fill="none" stroke="#16846c" stroke-width="2" stroke-linecap="round">
+            <path d="M130 344H390M130 337V351M390 337V351"/>
+            <path d="M438 155V310M431 155H445M431 310H445"/>
+            <path d="M260 48V30M252 38L260 30 268 38"/>
+          </g>
+          <g fill="#123d72" stroke="none" font-family="Arial, sans-serif"
+            font-size="12" font-weight="700">
+            <text x="260" y="365" text-anchor="middle">HOUSE PLAN / ELEVATION</text>
+            <text x="451" y="234" text-anchor="middle"
+              transform="rotate(90 451 234)">FRONT VIEW</text>
+            <text x="260" y="23" text-anchor="middle" fill="#16846c">DESIGN CONCEPT</text>
+          </g>
+        </svg>
+        <div class="art-label">
+          <span>01 / PLAN</span>
+          <b>Made around your needs.</b>
+        </div>
+      </div>
+    </section>
+
+    <div class="service-strip">
+      <span>CONSTRUCTION</span><i>✳</i><span>DESIGN</span><i>✳</i>
+      <span>RENOVATION</span><i>✳</i><span>BUILDING SUPPORT</span>
+    </div>
+
+    <!-- 8 SERVICES -->
+    <section class="section section-pad" id="services">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">WHAT WE DO</p>
+          <h2>Support for every<br><em>stage of your build.</em></h2>
+        </div>
+        <p class="section-intro">
+          Tell us what you need. We’ll help clarify the work involved and discuss practical next steps.
+        </p>
+      </div>
+
+      <div class="services-grid">
+        <article class="service-card">
+          <div class="service-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="m5 22 19-16 19 16M11 20v21h26V20M20 41V28h8v13"/></svg></div>
+          <h3>Interior Design</h3>
+          <p>Interior concepts and space planning tailored to your requirements.</p>
+        </article>
+        <article class="service-card">
+          <div class="service-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 42V7h36v35M6 17h36M18 7v35M30 17v25M18 27h12"/></svg></div>
+          <h3>Interior &amp; Exterior Design</h3>
+          <p>Design ideas for indoor spaces and exterior appearance.</p>
+        </article>
+        <article class="service-card">
+          <div class="service-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 12h18v14H8zM17 26v9h15M26 19h7a7 7 0 0 1 7 7v8M33 34v7M8 7v5M4 7h8M36 8v7M32 12h8"/></svg></div>
+          <h3>Electrical &amp; Plumbing</h3>
+          <p>Electrical and plumbing work for your building requirements.</p>
+        </article>
+        <article class="service-card">
+          <div class="service-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="m8 39 23-23 8 8-23 23H8zM27 13l5-5 8 8-5 5M7 9h13M7 15h8M7 21h5"/></svg></div>
+          <h3>Painting</h3>
+          <p>Painting requirements for new buildings and renovation projects.</p>
+        </article>
+        <article class="service-card">
+          <div class="service-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 15 24 5l18 10-18 10zM6 15v20l18 9 18-9V15M24 25v19M15 10l18 10"/></svg></div>
+          <h3>Material Procurement</h3>
+          <p>Support with sourcing building materials for your project.</p>
+        </article>
+        <article class="service-card">
+          <div class="service-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5s-13 15-13 25a13 13 0 0 0 26 0C37 20 24 5 24 5Z M17 31a7 7 0 0 0 7 7"/></svg></div>
+          <h3>Waterproofing</h3>
+          <p>Waterproofing requirements for relevant building areas.</p>
+        </article>
+        <article class="service-card">
+          <div class="service-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 6h17v17H6zM25 6h17v17H25zM6 25h17v17H6zM25 25h17v17H25zM14 6v17M33 6v17M6 14h17M25 14h17M14 25v17M33 25v17M6 33h17M25 33h17"/></svg></div>
+          <h3>Tile Laying</h3>
+          <p>Tile installation requirements for floors and walls.</p>
+        </article>
+        <article class="service-card">
+          <div class="service-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 42V7h32v35M15 15h18M15 22h18M15 29h10M15 36h18M5 42h38"/></svg></div>
+          <h3>Approval &amp; Building Plan Design</h3>
+          <p>Building plan design and guidance on approval-related requirements.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 4 PROJECT TYPES -->
+    <section class="project-section section section-pad" id="projects">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">HOW CAN WE HELP?</p>
+          <h2>Choose your <em>project type.</em></h2>
+        </div>
+        <p class="section-intro">Choose the type of work you need.</p>
+      </div>
+      <div class="project-grid">
+        <a class="project-card" data-project="New Construction" href="#enquiry">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="m5 23 19-16 19 16M11 20v21h26V20M20 41V28h8v13"/></svg>
+          <h3>New Construction</h3><span class="project-arrow">↗</span>
+        </a>
+        <a class="project-card" data-project="Renovation / Repair Work" href="#enquiry">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 8h32v32H8zM16 16h16v16H16zM4 16h4M40 16h4M4 32h4M40 32h4"/></svg>
+          <h3>Renovation / Repair Work</h3><span class="project-arrow">↗</span>
+        </a>
+        <a class="project-card" data-project="Building Materials Supply" href="#enquiry">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 15 24 5l18 10-18 10zM6 15v20l18 9 18-9V15M24 25v19"/></svg>
+          <h3>Building Materials Supply</h3><span class="project-arrow">↗</span>
+        </a>
+        <a class="project-card" data-project="Planning & Estimation" href="#enquiry">
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 6h32v36H8zM15 15h18M15 22h18M15 29h10M15 36h18"/></svg>
+          <h3>Planning &amp; Estimation</h3><span class="project-arrow">↗</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section class="process-section section section-pad" id="process">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">SIMPLE &amp; CLEAR</p>
+          <h2>From first enquiry<br><em>to next steps.</em></h2>
+        </div>
+      </div>
+      <div class="process-grid">
+        <article><span>01</span><h3>Choose how to enquire</h3><p>Contact us directly or request a detailed quote.</p></article>
+        <article><span>02</span><h3>Share the details</h3><p>Tell us about your project, location, service and budget if known.</p></article>
+        <article><span>03</span><h3>Discuss the plan</h3><p>Review the requirements and discuss scope, timing and estimate.</p></article>
+      </div>
+    </section>
+
+    <!-- ENQUIRY -->
+    <section class="enquiry-section section section-pad" id="enquiry">
+      <div class="section-heading enquiry-heading">
+        <div><p class="eyebrow">ENQUIRY</p><h2>Get in <em>touch.</em></h2></div>
+      </div>
+
+      <div class="enquiry-actions">
+        <a class="button whatsapp-button" href="https://wa.me/919025541161"
+          target="_blank" rel="noopener noreferrer">Immediate Enquiry</a>
+        <button class="button button-blue" id="showDetailedQuote" type="button"
+          aria-controls="detailedForm" aria-expanded="false">Get Detailed Quote</button>
+      </div>
+
+      <div class="forms-grid" id="quoteForms">
+        <div class="form-card detailed-card" id="detailedForm" hidden>
+          <div class="form-heading">
+            <h3>Request a detailed quote</h3>
+            <div class="progress-meta">
+              <span id="stepLabel">STEP 1 OF 2</span>
+              <span id="stepTitle">Contact &amp; project</span>
+            </div>
+            <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
+            <div class="quote-stepper" aria-label="Quote form progress">
+              <div class="quote-step is-current" data-step-indicator="1" aria-current="step">
+                <span class="quote-step-number">1</span>
+                <span class="quote-step-copy"><strong>Contact details</strong><small>Your name and project</small></span>
+              </div>
+              <span class="quote-step-connector" aria-hidden="true"></span>
+              <div class="quote-step" data-step-indicator="2">
+                <span class="quote-step-number">2</span>
+                <span class="quote-step-copy"><strong>Quote details</strong><small>Area, budget and needs</small></span>
+              </div>
+            </div>
+          </div>
+
+          <iframe class="submission-frame" id="submissionFrame" name="submissionFrame"
+            title="Form submission response" aria-hidden="true"></iframe>
+
+          <form id="detailedQuoteForm"
+            action="https://script.google.com/macros/s/AKfycbyMsEAzXdSathCJm2i44CA6lelm6KDYw9MTSRDPxiPriNXhYg2IC0AB5gIE0CYkU5hO/exec"
+            method="post" target="submissionFrame" novalidate>
+            <input type="hidden" name="formType" value="Detailed Quote">
+            <input type="hidden" name="submissionId" id="submissionId">
+
+            <div class="honeypot" aria-hidden="true">
+              <label for="website">Leave this field empty</label>
+              <input id="website" name="website" autocomplete="off" tabindex="-1">
+            </div>
+
+            <!-- STEP 1 -->
+            <div class="form-step is-active" data-step="1">
+              <div class="field">
+                <label for="quoteName">Full name <b>*</b></label>
+                <input id="quoteName" name="name" autocomplete="name" maxlength="100"
+                  placeholder="Enter your name" required>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label for="quotePhone">Mobile number <b>*</b></label>
+                  <input id="quotePhone" name="phone" type="tel" inputmode="tel"
+                    autocomplete="tel" maxlength="20" placeholder="10-digit mobile number" required>
+                </div>
+                <div class="field">
+                  <label for="quoteEmail">Email address</label>
+                  <input id="quoteEmail" name="email" type="email" autocomplete="email"
+                    maxlength="150" placeholder="you@example.com">
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="quoteLocation">Project location <b>*</b></label>
+                <input id="quoteLocation" name="location" maxlength="200"
+                  placeholder="Area / town / district" required>
+              </div>
+
+              <div class="field">
+                <label for="projectType">Project type <b>*</b></label>
+                <select id="projectType" name="projectType" required>
+                  <option value="">Select project type</option>
+                  <option>New Construction</option>
+                  <option>Renovation / Repair Work</option>
+                  <option>Building Materials Supply</option>
+                  <option>Planning &amp; Estimation</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="quoteService">Service required <b>*</b></label>
+                <select id="quoteService" name="service" required>
+                  <option value="">Select a service</option>
+                  <option>Interior Design</option>
+                  <option>Interior &amp; Exterior Design</option>
+                  <option>Electrical &amp; Plumbing</option>
+                  <option>Painting</option>
+                  <option>Material Procurement</option>
+                  <option>Waterproofing</option>
+                  <option>Tile Laying</option>
+                  <option>Approval &amp; Building Plan Design</option>
+                  <option>Multiple Services</option>
+                </select>
+              </div>
+
+              <p class="form-error" id="step1Error" role="alert"></p>
+              <button class="button button-blue button-full" id="nextStep" type="button">
+                Continue to project details <span aria-hidden="true">→</span>
+              </button>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="form-step" data-step="2" hidden>
+              <div class="field-row">
+                <div class="field">
+                  <label for="buildingArea">Building / land area</label>
+                  <input id="buildingArea" name="buildingArea" type="number" inputmode="decimal"
+                    min="0" step="any" placeholder="Enter area (e.g. 1200)">
+                </div>
+                <div class="field">
+                  <label for="areaUnit">Area unit</label>
+                  <select id="areaUnit" name="areaUnit">
+                    <option value="sq.ft">Square feet (sq.ft)</option>
+                    <option value="sq.m">Square metres (sq.m)</option>
+                    <option value="cents">Cents</option>
+                    <option value="acres">Acres</option>
+                    <option value="grounds">Grounds</option>
+                  </select>
+                </div>
+              </div>
+              <p class="field-hint">If you are not sure about the area yet, you can leave this blank.</p>
+
+              <div class="field">
+                <label for="quoteBudget">Estimated budget</label>
+                <select id="quoteBudget" name="budget">
+                  <option value="">Choose if known</option>
+                  <option>Below ₹1 lakh</option>
+                  <option>₹1–5 lakh</option>
+                  <option>₹5–10 lakh</option>
+                  <option>₹10–25 lakh</option>
+                  <option>₹25 lakh and above</option>
+                  <option>Not decided yet</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="quoteTimeline">Expected start</label>
+                <select id="quoteTimeline" name="timeline">
+                  <option value="">Choose if known</option>
+                  <option>As soon as possible</option>
+                  <option>Within 1 month</option>
+                  <option>Within 1–3 months</option>
+                  <option>After 3 months</option>
+                  <option>Just planning</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="quoteDetails">Project requirements <b>*</b></label>
+                <textarea id="quoteDetails" name="requirement" maxlength="2500"
+                  placeholder="Floor count, dimensions, materials, work scope or other details"
+                  rows="5" required></textarea>
+              </div>
+
+              <p class="form-error" id="step2Error" role="alert"></p>
+              <div class="form-actions">
+                <button class="button button-outline" id="backStep" type="button">← Back</button>
+                <button class="button button-blue" id="submitQuote" type="submit">
+                  Submit detailed quote <span aria-hidden="true">↗</span>
+                </button>
+              </div>
+            </div>
+            <p class="form-status" id="quoteStatus" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT LINKS -->
+    <section class="contact-section section section-pad" id="contact">
+      <p class="eyebrow">GET IN TOUCH</p>
+      <h2>Have a project in mind?</h2>
+      <p class="contact-subtitle">Reach out through the channel that works best for you.</p>
+
+      <div class="contact-grid">
+        <a class="contact-card" href="https://wa.me/919025541161" target="_blank" rel="noopener noreferrer">
+          <span class="contact-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M7 40 10 29a17 17 0 1 1 7 7zM17 17c1 7 7 13 14 14l3-4-6-3-3 3a17 17 0 0 1-4-4l3-3-3-6z"/></svg></span>
+          <span class="contact-label">WHATSAPP</span>
+          <strong>90255 41161</strong>
+          <span class="contact-link">Start a conversation ↗</span>
+        </a>
+
+        <a class="contact-card" href="mailto:vaazhvizhicontractors@gmail.com">
+          <span class="contact-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect height="28" rx="2" width="38" x="5" y="10"/><path d="m6 12 18 15 18-15"/></svg></span>
+          <span class="contact-label">EMAIL</span>
+          <strong>Send an email</strong>
+          <span class="contact-link">vaazhvizhicontractors@gmail.com</span>
+        </a>
+
+        <a class="contact-card" href="https://www.instagram.com/vaazhvizhi_contracters/"
+          target="_blank" rel="noopener noreferrer">
+          <span class="contact-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><rect height="34" rx="9" width="34" x="7" y="7"/><circle cx="24" cy="24" r="8"/><path d="M34 14h.01"/></svg></span>
+          <span class="contact-label">INSTAGRAM</span>
+          <strong>Follow our page</strong>
+          <span class="contact-link">@vaazhvizhi_contracters ↗</span>
+        </a>
+
+        <a class="contact-card" href="https://maps.app.goo.gl/GWejen8cyvza9THs7?g_st=aw"
+          target="_blank" rel="noopener noreferrer">
+          <span class="contact-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M39 20c0 12-15 24-15 24S9 32 9 20a15 15 0 1 1 30 0Z"/><circle cx="24" cy="20" r="5"/></svg></span>
+          <span class="contact-label">LOCATION</span>
+          <strong>Find us on Maps</strong>
+          <span class="contact-link">Open Google Maps ↗</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="#home">
+      <span class="brand-mark">V</span><span>Vaazhvizhi <b>Contracters</b></span>
+    </a>
+    <p>Thoughtful building services, shaped around your requirements.</p>
+    <span>© <span id="currentYear"></span> Vaazhvizhi Contracters</span>
+  </footer>
+
+  <a class="floating-whatsapp" href="https://wa.me/919025541161"
+    target="_blank" rel="noopener noreferrer" aria-label="Contact on WhatsApp">
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M7 40 10 29a17 17 0 1 1 7 7zM17 17c1 7 7 13 14 14l3-4-6-3-3 3a17 17 0 0 1-4-4l3-3-3-6z"/>
+    </svg>
+  </a>
+</body>
+</html>
