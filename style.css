@@ -38,7 +38,3 @@
 .hero-art{display:grid;place-items:center;min-height:430px;padding:22px;overflow:hidden;background:linear-gradient(145deg,#edf5fc 0%,#f9fcff 62%,#e7f5ef 100%);border:1px solid #dce8f4}
 .hero-house{display:block;width:100%;max-width:560px;height:auto;stroke:none}
 @media(max-width:780px){.hero-art{min-height:unset;padding:14px}}
-/* Final hero: refined line illustration, no caption. */
-.hero-art{display:grid;place-items:center;min-height:430px;padding:22px;overflow:hidden;background:linear-gradient(145deg,#edf5fc 0%,#f9fcff 62%,#e7f5ef 100%);border:1px solid #dce8f4}
-.hero-house{display:block;width:100%;max-width:560px;height:auto;stroke:none}
-@media(max-width:780px){.hero-art{min-height:unset;padding:14px}}
